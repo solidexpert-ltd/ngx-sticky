@@ -27,6 +27,8 @@ jobs:
           export NEW_VERSION
           node -e "const fs=require('fs'); const v=process.env.NEW_VERSION; for (const file of ['package.json','projects/ngx-sticky/package.json']) { const p=require('./'+file); p.version=v; fs.writeFileSync(file, JSON.stringify(p,null,2)+'\n'); } console.log('Publish version: '+v)"
       - run: npm run build
+      - name: Use npm with trusted publishing
+        run: npm install -g npm@latest
       - name: Publish to NPM
         working-directory: dist/ngx-sticky
         run: |
