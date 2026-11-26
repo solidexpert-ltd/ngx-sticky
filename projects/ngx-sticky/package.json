@@ -1,0 +1,30 @@
+{
+  "name": "@solidexpert/ngx-sticky",
+  "version": "22.0.0",
+  "description": "CSS position: sticky implementation for Angular. Port of @ngui/sticky.",
+  "license": "MIT",
+  "author": "Allen Kim <allenhwkim@gmail.com>",
+  "keywords": [
+    "angular",
+    "sticky",
+    "position",
+    "ngui",
+    "directive"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solidexpert-ltd/ngx-sticky.git"
+  },
+  "bugs": {
+    "url": "https://github.com/solidexpert-ltd/ngx-sticky/issues"
+  },
+  "homepage": "https://github.com/solidexpert-ltd/ngx-sticky#readme",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": ">=22.0.0",
+    "@angular/core": ">=22.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}

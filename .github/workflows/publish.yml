@@ -1,0 +1,37 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: Set publish version
+        run: |
+          ANGULAR_MAJOR=$(node -p "const p=require('./package.json'); const raw=(p.devDependencies&&p.devDependencies['@angular/core'])||(p.peerDependencies&&p.peerDependencies['@angular/core']); if(!raw) throw new Error('missing @angular/core'); String(raw).replace(/^[^0-9]*/,'').split('.')[0]")
+          NEW_VERSION="${ANGULAR_MAJOR}.0.${{ github.run_number }}"
+          export NEW_VERSION
+          node -e "const fs=require('fs'); const v=process.env.NEW_VERSION; for (const file of ['package.json','projects/ngx-sticky/package.json']) { const p=require('./'+file); p.version=v; fs.writeFileSync(file, JSON.stringify(p,null,2)+'\n'); } console.log('Publish version: '+v)"
+      - run: npm run build
+      - name: Publish to NPM
+        working-directory: dist/ngx-sticky
+        run: |
+          if [ -n "${NPM_CONFIG_USERCONFIG:-}" ] && [ -f "$NPM_CONFIG_USERCONFIG" ]; then
+            sed -i '/_authToken/d' "$NPM_CONFIG_USERCONFIG"
+          fi
+          unset NODE_AUTH_TOKEN
+          npm publish --access public --tag latest
